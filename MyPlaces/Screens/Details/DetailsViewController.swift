@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-/// View layer of the details module
+/// View showing details about a Google Earth placemark
 final class DetailsViewController: UIViewController {
 
     init(place: PlaceData) {

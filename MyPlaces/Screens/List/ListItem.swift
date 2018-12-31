@@ -6,20 +6,23 @@
 //  Copyright © 2017 Glen Brixey. All rights reserved.
 //
 
-/// Types of item that can appear in the list
-enum ListItemType {
-    case folder
-    case place
-    /// This is used for special list cells such as "All Places" that don't correspond directly to a single folder or place.
-    case other
-}
-
-/// Item that can be presented in the list
 struct ListItem {
-    let itemType: ListItemType
+    let itemType: ItemType
     let itemID: Int
     let itemName: String
     let itemDetail: String
+}
+
+// MARK: - ListItem.ItemType
+
+extension ListItem {
+
+    enum ItemType {
+        case folder
+        case place
+        /// This is used for special list cells such as "All Places" that don't correspond directly to a single folder or place.
+        case other
+    }
 }
 
 // MARK: - Comparable

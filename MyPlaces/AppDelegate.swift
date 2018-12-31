@@ -28,9 +28,11 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
+        // Nothing...
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
+        // Nothing...
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {

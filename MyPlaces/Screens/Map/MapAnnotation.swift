@@ -8,7 +8,6 @@
 
 import MapKit
 
-/// Annotation for the map view
 final class MapAnnotation: NSObject, MKAnnotation {
 
     // MARK: - Public

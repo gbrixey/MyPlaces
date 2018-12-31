@@ -11,7 +11,7 @@ enum ListSearchMode: Equatable {
     case allPlaces
     /// Subfolders and places within the given folder
     case folder(folderID: Int?)
-    /// Nearest places shown first with no folder hierarchy
+    /// Nearest places shown first, with no folder hierarchy
     case nearby
     /// Places matching the given text, with no folder hierarchy
     case text(text: String)

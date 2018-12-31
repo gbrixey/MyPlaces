@@ -95,17 +95,17 @@ final class DataManager {
     private var rootFolder: FolderData?
     private var folders: [Int: FolderData] = [:]
     private var places: [Int: PlaceData] = [:]
-    
-    /// Returns the folder with the given id, fatalerrors if such a folder does not exist.
+
+    private var allPlaces: [PlaceData] {
+        return Array(places.values)
+    }
+
+    /// Returns the folder with the given id, generates a `fatalError` if a folder with this ID cannot be found.
     private func folder(withID folderID: Int) -> FolderData {
         guard let folder = folders[folderID] else {
             fatalError("Bad folder id")
         }
         return folder
-    }
-    
-    private var allPlaces: [PlaceData] {
-        return Array(places.values)
     }
 }
 
@@ -184,7 +184,7 @@ extension DataManager {
         for child in coordinate.children.makeIterator() {
             guard let element = child.element,
                 element.name == "coordinates" else {
-                continue
+                    continue
             }
             let components = element.text.components(separatedBy: ",")
             if let parsedLongitude = Double(components[0]), let parsedLatitude = Double(components[1]) {
