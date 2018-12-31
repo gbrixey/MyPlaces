@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MapViewController" customModule="MyPlaces" customModuleProvider="target">
+            <connections>
+                <outlet property="mapView" destination="j9Y-Wa-ejQ" id="1p1-bk-d9x"/>
+                <outlet property="view" destination="hHo-Ah-LvS" id="mTQ-Fq-zcf"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="hHo-Ah-LvS">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" pitchEnabled="NO" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="j9Y-Wa-ejQ">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="DhR-pA-Uyh"/>
+                    </connections>
+                </mapView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="LEP-a6-HCT" firstAttribute="bottom" secondItem="j9Y-Wa-ejQ" secondAttribute="bottom" id="0bc-J4-c7b"/>
+                <constraint firstAttribute="trailing" secondItem="j9Y-Wa-ejQ" secondAttribute="trailing" id="HDu-C5-Wzr"/>
+                <constraint firstItem="LEP-a6-HCT" firstAttribute="top" secondItem="j9Y-Wa-ejQ" secondAttribute="top" id="Laa-k2-cBF"/>
+                <constraint firstItem="j9Y-Wa-ejQ" firstAttribute="leading" secondItem="hHo-Ah-LvS" secondAttribute="leading" id="f8K-wy-CbB"/>
+            </constraints>
+            <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
+            <simulatedTabBarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
+            <viewLayoutGuide key="safeArea" id="LEP-a6-HCT"/>
+        </view>
+    </objects>
+</document>
