@@ -82,7 +82,6 @@
 		E152F0E921D57E6100144436 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				E152F0EA21D57E7100144436 /* Util */,
 				E12773B91ED1F13D00BBE850 /* AppearanceManager.swift */,
 				E1E051D61ED139D500D2CC30 /* LocationManager.swift */,
 				E1E0516D1ECFB8A700D2CC30 /* DataManager.swift */,
@@ -100,7 +99,7 @@
 			path = Util;
 			sourceTree = "<group>";
 		};
-		E152F0EB21D57E8300144436 /* Modules */ = {
+		E152F0EB21D57E8300144436 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
 				E152F0ED21D57E9600144436 /* Details */,
@@ -108,7 +107,7 @@
 				E152F0EF21D57EA500144436 /* Map */,
 				E15FCD2121DA644D00C8F72D /* Root */,
 			);
-			path = Modules;
+			path = Screens;
 			sourceTree = "<group>";
 		};
 		E152F0ED21D57E9600144436 /* Details */ = {
@@ -168,8 +167,9 @@
 		E1E051351ECFB43000D2CC30 /* MyPlaces */ = {
 			isa = PBXGroup;
 			children = (
-				E152F0EB21D57E8300144436 /* Modules */,
+				E152F0EB21D57E8300144436 /* Screens */,
 				E152F0E921D57E6100144436 /* Core */,
+				E152F0EA21D57E7100144436 /* Util */,
 				E1E051361ECFB43000D2CC30 /* AppDelegate.swift */,
 				E1E051971ED09D9000D2CC30 /* Launch.storyboard */,
 				E1E0513D1ECFB43000D2CC30 /* Assets.xcassets */,
