@@ -12,17 +12,17 @@ final class MapAnnotation: NSObject, MKAnnotation {
 
     // MARK: - Public
 
-    private(set) var place: PlaceData
+    private(set) var place: Place
     
     var coordinate: CLLocationCoordinate2D {
         return place.coordinate
     }
     
     var title: String? {
-        return place.placeName
+        return place.name
     }
     
-    init(place: PlaceData) {
+    init(place: Place) {
         self.place = place
     }
 }

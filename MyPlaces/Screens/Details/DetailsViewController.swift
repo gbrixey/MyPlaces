@@ -12,7 +12,7 @@ import MapKit
 /// View showing details about a Google Earth placemark
 final class DetailsViewController: UIViewController {
 
-    init(place: PlaceData) {
+    init(place: Place) {
         self.place = place
         super.init(nibName: nil, bundle: nil)
         hidesBottomBarWhenPushed = true
@@ -27,8 +27,8 @@ final class DetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Details"
-        nameLabel.text = place.placeName
-        descriptionLabel.text = place.description
+        nameLabel.text = place.name
+        descriptionLabel.text = place.details
         createMapImage()
     }
 
@@ -40,7 +40,7 @@ final class DetailsViewController: UIViewController {
     @IBOutlet private var activityIndicator: UIActivityIndicatorView!
     @IBOutlet private var pinImageView: UIImageView!
 
-    private var place: PlaceData
+    private var place: Place
 
     private func createMapImage() {
         let options = MKMapSnapshotter.Options()

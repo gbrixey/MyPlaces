@@ -56,18 +56,18 @@ final class ListViewController: UITableViewController {
 
     @objc private func backButtonTapped() {
         switch searchMode {
-        case .folder(let folderID):
-            guard let parentFolderID = dataManager.parentFolderIDForFolder(withID: folderID) else { fallthrough }
-            searchMode = .folder(folderID: parentFolderID)
+        case .folder(let folder):
+            guard let parentFolder = folder?.parentFolder else { return }
+            searchMode = .folder(folder: parentFolder)
         default:
-            searchMode = .folder(folderID: dataManager.rootFolderID)
+            searchMode = .folder(folder: dataManager.rootFolder)
         }
     }
 
     @objc private func nearbyButtonTapped() {
         switch searchMode {
         case .nearby:
-            searchMode = .folder(folderID: dataManager.rootFolderID)
+            searchMode = .folder(folder: dataManager.rootFolder)
         default:
             searchMode = .nearby
         }
@@ -82,7 +82,6 @@ final class ListViewController: UITableViewController {
     private var nearbyButton: UIButton!
     private var nearbyButtonItem: UIBarButtonItem!
     private let cellIdentifier = "ListCell"
-    private let allPlacesItemID = -1
 
     private var listItems: [ListItem] = [] {
         didSet {
@@ -130,9 +129,9 @@ final class ListViewController: UITableViewController {
         case .allPlaces:
             navTitle = "All Places"
             shouldShowBackButton = true
-        case .folder(let folderID):
-            navTitle = dataManager.nameOfFolder(withID: folderID) ?? "My Places"
-            shouldShowBackButton = (folderID != dataManager.rootFolderID)
+        case .folder(let folder):
+            navTitle = folder?.name ?? "My Places"
+            shouldShowBackButton = (folder != nil && !folder!.isRootFolder)
         case .nearby:
             navTitle = "Nearby"
         case .text(_):
@@ -147,41 +146,37 @@ final class ListViewController: UITableViewController {
     private func fetchItems() {
         switch searchMode {
         case .allPlaces:
-            let rootFolderID = dataManager.rootFolderID
-            listItems = dataManager.recursivePlacesForFolder(withID: rootFolderID).map({ listItem(fromPlace: $0) }).sorted()
-        case .folder(let folderID):
-            fetchItemsInFolder(withID: folderID)
+            listItems = dataManager.allPlaces.map({ listItem(forPlace: $0) }).sorted()
+        case .folder(let folder):
+            listItems = self.listItems(inFolder: folder)
         case .nearby:
-            fetchNearbyPlaces()
+            guard let location = LocationManager.sharedLocationManager.currentLocation else { return }
+            let places = dataManager.places(near: location).prefix(10)
+            listItems = places.map({ listItem(forPlace: $0, location: location)})
         case .text(let text):
-            listItems = dataManager.places(matchingText: text).map({ listItem(fromPlace: $0) }).sorted()
+            listItems = dataManager.places(matchingText: text).map({ listItem(forPlace: $0) }).sorted()
         }
     }
 
-    private func fetchItemsInFolder(withID folderID: Int?) {
-        guard let folderID = folderID else { return }
-        let subfolders = dataManager.subfoldersForFolder(withID: folderID).map({ listItem(fromFolder: $0) }).sorted()
-        let places = dataManager.placesForFolder(withID: folderID).map({ listItem(fromPlace: $0) }).sorted()
-        var listItems = subfolders + places
-        if folderID == dataManager.rootFolderID {
-            let allPlacesItem = ListItem(itemType: .other, itemID: allPlacesItemID, itemName: "All Places", itemDetail: "")
+    private func listItems(inFolder folder: Folder?) -> [ListItem] {
+        let subfolders: [Folder] = (folder?.subfolders?.allObjects as? [Folder]) ?? []
+        let subfolderItems = subfolders.map({ listItem(forFolder: $0) }).sorted()
+        let places: [Place] = (folder?.places?.allObjects as? [Place]) ?? []
+        let placeItems = places.map({ listItem(forPlace: $0) }).sorted()
+        var listItems = subfolderItems + placeItems
+        if folder?.isRootFolder ?? false {
+            let allPlacesItem = ListItem(itemType: .allPlaces, item: nil, itemName: "All Places", itemDetail: "")
             listItems.insert(allPlacesItem, at: 0)
         }
-        self.listItems = listItems
+        return listItems
     }
 
-    private func fetchNearbyPlaces() {
-        guard let location = LocationManager.sharedLocationManager.currentLocation else { return }
-        let places = dataManager.places(near: location).prefix(10)
-        listItems = places.map({ listItem(fromPlace: $0, location: location)})
+    private func listItem(forFolder folder: Folder) -> ListItem {
+        return ListItem(itemType: .folder, item: folder, itemName: folder.name, itemDetail: nil)
     }
 
-    private func listItem(fromFolder folder: FolderData) -> ListItem {
-        return ListItem(itemType: .folder, itemID: folder.folderID, itemName: folder.folderName, itemDetail: "")
-    }
-
-    private func listItem(fromPlace place: PlaceData, location: CLLocation? = nil) -> ListItem {
-        var detail: String = ""
+    private func listItem(forPlace place: Place, location: CLLocation? = nil) -> ListItem {
+        var detail: String? = nil
         if let location = location {
             let distance = location.distance(from: CLLocation(latitude: place.coordinate.latitude, longitude: place.coordinate.longitude))
             let distanceInFeet = Int(round((distance * 3.28084) / 50) * 50)
@@ -192,7 +187,7 @@ final class ListViewController: UITableViewController {
                 detail = "\(miles) miles"
             }
         }
-        return ListItem(itemType: .place, itemID: place.placeID, itemName: place.placeName, itemDetail: detail)
+        return ListItem(itemType: .place, item: place, itemName: place.name, itemDetail: detail)
     }
 }
 
@@ -222,15 +217,13 @@ extension ListViewController {
         let item = listItems[indexPath.row]
         switch item.itemType {
         case .folder:
-            searchMode = .folder(folderID: item.itemID)
+            searchMode = .folder(folder: item.item as? Folder)
         case .place:
-            guard let place = dataManager.place(withID: item.itemID) else { return }
+            let place = item.item as! Place
             let detailsVC = DetailsViewController(place: place)
             navigationController?.pushViewController(detailsVC, animated: true)
-        case .other:
-            if item.itemID == allPlacesItemID {
-                searchMode = .allPlaces
-            }
+        case .allPlaces:
+            searchMode = .allPlaces
         }
     }
 }
@@ -249,7 +242,7 @@ extension ListViewController: UISearchBarDelegate {
         if let text = searchBar.text, text.count > 0 {
             searchMode = .text(text: text)
         } else {
-            searchMode = .folder(folderID: dataManager.rootFolderID)
+            searchMode = .folder(folder: dataManager.rootFolder)
             if !searchBar.isFirstResponder {
                 // User tapped clear button after searching
                 searchBarShouldBecomeFirstResponder = false
@@ -267,7 +260,7 @@ extension ListViewController: UISearchBarDelegate {
 extension ListViewController: UIDocumentPickerDelegate {
 
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        dataManager.parseXMLFile(at: urls[0])
-        searchMode = .folder(folderID: dataManager.rootFolderID)
+        dataManager.parseKMLFile(at: urls[0])
+        searchMode = .folder(folder: dataManager.rootFolder)
     }
 }

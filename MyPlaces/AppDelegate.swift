@@ -40,6 +40,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
+        DataManager.sharedDataManager.saveContext()
     }
 
     // MARK: - Private

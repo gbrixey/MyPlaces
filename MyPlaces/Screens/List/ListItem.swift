@@ -6,11 +6,13 @@
 //  Copyright © 2017 Glen Brixey. All rights reserved.
 //
 
+import CoreData
+
 struct ListItem {
     let itemType: ItemType
-    let itemID: Int
-    let itemName: String
-    let itemDetail: String
+    let item: NSManagedObject?
+    let itemName: String?
+    let itemDetail: String?
 }
 
 // MARK: - ListItem.ItemType
@@ -20,8 +22,7 @@ extension ListItem {
     enum ItemType {
         case folder
         case place
-        /// This is used for special list cells such as "All Places" that don't correspond directly to a single folder or place.
-        case other
+        case allPlaces
     }
 }
 
@@ -30,6 +31,8 @@ extension ListItem {
 extension ListItem: Comparable {
 
     static func < (lhs: ListItem, rhs: ListItem) -> Bool {
-        return lhs.itemName < rhs.itemName
+        let lhsItemName = lhs.itemName ?? ""
+        let rhsItemName = rhs.itemName ?? ""
+        return lhsItemName < rhsItemName
     }
 }

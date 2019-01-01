@@ -12,16 +12,16 @@ final class MapViewController: UIViewController {
 
     // MARK: - Public
 
-    var folderID: Int? {
+    var folder: Folder? {
         didSet {
-            guard folderID != oldValue else { return }
+            guard folder?.objectID != oldValue?.objectID else { return }
             fetchItems()
             updateNavigationBar()
         }
     }
 
-    init(folderID: Int?) {
-        self.folderID = folderID
+    init(folder: Folder?) {
+        self.folder = folder
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -41,7 +41,7 @@ final class MapViewController: UIViewController {
     // MARK: - Actions
 
     @objc private func resetButtonTapped() {
-        folderID = dataManager.rootFolderID
+        folder = dataManager.rootFolder
     }
     
     @objc private func nearbyButtonTapped(_ sender: UIBarButtonItem) {
@@ -54,7 +54,7 @@ final class MapViewController: UIViewController {
 
     @IBOutlet private var mapView: MKMapView!
     private var resetButtonItem: UIBarButtonItem!
-    private var places: [PlaceData] = []
+    private var places: [Place] = []
     private let annotationIdentifier = "MapAnnotation"
 
     private var dataManager: DataManager {
@@ -69,14 +69,15 @@ final class MapViewController: UIViewController {
     }
 
     private func updateNavigationBar() {
-        navigationItem.title = dataManager.nameOfFolder(withID: folderID) ?? title
-        navigationItem.leftBarButtonItem = (folderID == dataManager.rootFolderID) ? nil : resetButtonItem
+        navigationItem.title = folder?.name ?? title
+        navigationItem.leftBarButtonItem = (folder == nil || folder!.isRootFolder) ? nil : resetButtonItem
     }
 
     private func fetchItems() {
         guard isViewLoaded else { return }
 
-        let places = dataManager.recursivePlacesForFolder(withID: folderID)
+        // TODO: recursive
+        let places = (folder?.places?.allObjects as? [Place]) ?? []
         let currentPlacesSet = Set(self.places)
         let newPlacesSet = Set(places)
         let placesToRemove = currentPlacesSet.subtracting(newPlacesSet)

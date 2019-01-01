@@ -7,8 +7,8 @@
 //
 
 import MapKit
+import CoreData
 import SWXMLHash
-import MobileCoreServices
 
 /// Class that manages Google Earth place data.
 /// The data is parsed from a KML file and stored in Core Data.
@@ -18,67 +18,35 @@ final class DataManager {
 
     static let sharedDataManager = DataManager()
 
-    var rootFolderID: Int? {
-        return rootFolder?.folderID
+    var rootFolder: Folder? {
+        let fetchRequest = NSFetchRequest<Folder>(entityName: "Folder")
+        fetchRequest.predicate = NSPredicate(format: "parentFolder = nil")
+        guard let fetchResults = try? context.fetch(fetchRequest) else { return nil }
+        return fetchResults.first
     }
 
-    func nameOfFolder(withID folderID: Int?) -> String? {
-        guard let folderID = folderID else { return nil }
-        return folder(withID: folderID).folderName
+    var allPlaces: [Place] {
+        let fetchRequest = NSFetchRequest<Place>(entityName: "Place")
+        guard let fetchResults = try? context.fetch(fetchRequest) else { return [] }
+        return fetchResults
     }
 
-    func parentFolderIDForFolder(withID folderID: Int?) -> Int? {
-        guard let folderID = folderID else { return nil }
-        let folder = self.folder(withID: folderID)
-        return folder.parentFolderID
+    init() {
+        persistentContainer = NSPersistentContainer(name: "MyPlaces")
+        persistentContainer.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            // Nothing...
+        })
     }
 
-    /// Returns places contained by the folder with the given folder id.
-    /// Not recursive, i.e. does not search subfolders of this folder.
-    func placesForFolder(withID folderID: Int?) -> [PlaceData] {
-        guard let folderID = folderID else {
-            return allPlaces
-        }
-        let folder = self.folder(withID: folderID)
-        return folder.placeIDs.map({ places[$0]! })
-    }
-
-    /// Returns subfolders directly contained by the folder with the given ID
-    func subfoldersForFolder(withID folderID: Int?) -> [FolderData] {
-        guard let folderID = folderID else {
-            return []
-        }
-        let folder = self.folder(withID: folderID)
-        return folder.subfolderIDs.map({ folders[$0]! })
-    }
-
-    /// Returns places contained by the folder with the given folder id or by any descendent of that folder.
-    func recursivePlacesForFolder(withID folderID: Int?) -> [PlaceData] {
-        guard let folderID = folderID else {
-            return allPlaces
-        }
-        let folder = self.folder(withID: folderID)
-        var recursivePlaces = folder.placeIDs.map({ places[$0]! })
-        for subfolderID in folder.subfolderIDs {
-            recursivePlaces.append(contentsOf: recursivePlacesForFolder(withID: subfolderID))
-        }
-        return recursivePlaces
-    }
-
-    func place(withID placeID: Int) -> PlaceData? {
-        return places[placeID]
-    }
-
-    func places(near location: CLLocation) -> [PlaceData] {
-        var placeIDToDistance: [Int: CLLocationDistance] = [:]
+    func places(near location: CLLocation) -> [Place] {
+        var placeIDToDistance: [NSManagedObjectID: CLLocationDistance] = [:]
         for place in allPlaces {
-            let distance = location.distance(from: CLLocation(latitude: place.coordinate.latitude,
-                                                              longitude: place.coordinate.longitude))
-            placeIDToDistance[place.placeID] = distance
+            let distance = location.distance(from: CLLocation(latitude: place.latitude, longitude: place.longitude))
+            placeIDToDistance[place.objectID] = distance
         }
         let sortedPlaces = allPlaces.sorted { (place1, place2) -> Bool in
-            guard let distance1 = placeIDToDistance[place1.placeID],
-                let distance2 = placeIDToDistance[place2.placeID] else {
+            guard let distance1 = placeIDToDistance[place1.objectID],
+                let distance2 = placeIDToDistance[place2.objectID] else {
                     return true
             }
             return distance1 < distance2
@@ -86,112 +54,151 @@ final class DataManager {
         return sortedPlaces
     }
 
-    func places(matchingText text: String) -> [PlaceData] {
-        return allPlaces.filter({ $0.placeName.lowercased().contains(text.lowercased()) })
+    func places(matchingText text: String) -> [Place] {
+        let fetchRequest = NSFetchRequest<Place>(entityName: "Place")
+        fetchRequest.predicate = NSPredicate(format: "name CONTAINS[cd] %@", text)
+        guard let fetchResults = try? context.fetch(fetchRequest) else { return [] }
+        return fetchResults
     }
     
     // MARK: - Private
 
-    private var rootFolder: FolderData?
-    private var folders: [Int: FolderData] = [:]
-    private var places: [Int: PlaceData] = [:]
+    private var persistentContainer: NSPersistentContainer
 
-    private var allPlaces: [PlaceData] {
-        return Array(places.values)
-    }
-
-    /// Returns the folder with the given id, generates a `fatalError` if a folder with this ID cannot be found.
-    private func folder(withID folderID: Int) -> FolderData {
-        guard let folder = folders[folderID] else {
-            fatalError("Bad folder id")
-        }
-        return folder
+    private var context: NSManagedObjectContext {
+        return persistentContainer.viewContext
     }
 }
 
-// MARK: - XML Parsing
+// MARK: - Core Data
 
 extension DataManager {
 
-    func parseXMLFile(at url: URL) {
-        guard let xmlData = try? Data(contentsOf: url) else { return }
-        let xml = SWXMLHash.parse(xmlData)
-        var folderID = 1
-        var placeID = 10001
-        rootFolder = parseFolder(xml["kml"]["Document"]["Folder"], folderID: &folderID, parentFolderID: nil, placeID: &placeID)
+    /// Try to save the managed object context
+    func saveContext () {
+        let context = persistentContainer.viewContext
+        if context.hasChanges {
+            try? context.save()
+        }
+    }
+}
+
+// MARK: - KML Parsing
+
+extension DataManager {
+
+    /// Attempt to parse the given KML file and 
+    func parseKMLFile(at url: URL) {
+        guard let kmlData = try? Data(contentsOf: url) else { return }
+        let kml = SWXMLHash.parse(kmlData)
+        let documentKML = kml["kml"]["Document"]
+
+        let documentHasMultipleFolders = documentKML.children.filter({ $0.element?.name == "Folder" }).count > 1
+        let documentHasPlacemarks = documentKML.children.filter({ $0.element?.name == "Placemark" }).count > 0
+        let shouldCreateNewRootFolder = documentHasPlacemarks || documentHasMultipleFolders
+        if shouldCreateNewRootFolder {
+            var documentName = documentKML.textOfFirstChildElement(withName: "name") ?? "My Places"
+            if documentName.hasSuffix(".kml") {
+                documentName = String(documentName.dropLast(4))
+            }
+            let folderDescription = NSEntityDescription.entity(forEntityName: "Folder", in: context)!
+            let folder = NSManagedObject(entity: folderDescription, insertInto: context)
+            folder.setValue(documentName, forKeyPath: "name")
+            for child in documentKML.children {
+                guard let element = child.element else { continue }
+                switch element.name {
+                case "Folder":
+                    parseFolder(child, parentFolder: folder)
+                case "Placemark":
+                    parsePlace(child, folder: folder)
+                default:
+                    break
+                }
+            }
+        } else {
+            let rootFolderKML = documentKML["Folder"]
+            parseFolder(rootFolderKML)
+        }
+        saveContext()
     }
     
-    /// Parse a <Folder> XML element
-    private func parseFolder(_ folder: XMLIndexer, folderID: inout Int, parentFolderID: Int?, placeID: inout Int) -> FolderData {
-        let id = folderID
-        folderID += 1
-        var name = "Untitled Folder"
-        var placeIDs: [Int] = []
-        var subfolderIDs: [Int] = []
-        for child in folder.children.makeIterator() {
-            guard let element = child.element else {
-                continue
-            }
+    /// Parse a <Folder> KML element
+    private func parseFolder(_ folderKML: XMLIndexer, parentFolder: NSManagedObject? = nil) {
+        let name = folderKML.textOfFirstChildElement(withName: "name") ?? "Untitled Folder"
+        let folderDescription = NSEntityDescription.entity(forEntityName: "Folder", in: context)!
+        let folder = NSManagedObject(entity: folderDescription, insertInto: context)
+        folder.setValue(name, forKeyPath: "name")
+        if let parentFolder = parentFolder {
+            folder.setValue(parentFolder, forKey: "parentFolder")
+        }
+        for child in folderKML.children {
+            guard let element = child.element else { continue }
             switch element.name {
             case "Folder":
-                let subfolder = parseFolder(child, folderID: &folderID, parentFolderID: id, placeID: &placeID)
-                subfolderIDs.append(subfolder.folderID)
-            case "name":
-                name = element.text
+                parseFolder(child, parentFolder: folder)
             case "Placemark":
-                let place = parsePlace(child, placeID: &placeID)
-                placeIDs.append(place.placeID)
+                parsePlace(child, folder: folder)
             default:
                 break
             }
         }
-        let folder = FolderData(folderID: id, folderName: name, parentFolderID: parentFolderID, subfolderIDs: subfolderIDs, placeIDs: placeIDs)
-        folders[id] = folder
-        return folder
     }
     
-    /// Parse a <Placemark> XML element
-    private func parsePlace(_ place: XMLIndexer, placeID: inout Int) -> PlaceData {
-        let id = placeID
-        placeID += 1
-        var name = "Untitled Place"
-        var description = "No Description"
+    /// Parse a <Placemark> KML element
+    private func parsePlace(_ placeKML: XMLIndexer, folder: NSManagedObject) {
+        let name = placeKML.textOfFirstChildElement(withName: "name") ?? "Untitled Place"
+        let details = placeKML.textOfFirstChildElement(withName: "description") ?? "No Description"
         var coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-        for child in place.children.makeIterator() {
-            guard let element = child.element else {
-                continue
-            }
-            switch element.name {
-            case "description":
-                description = element.text
-            case "name":
-                name = element.text
-            case "Point":
-                coordinate = parseCoordinate(child)
-            default:
-                break
-            }
+        if let point = placeKML.firstChildElement(withName: "Point") {
+            coordinate = parseCoordinate(point)
         }
-        let place = PlaceData(placeID: id, placeName: name, description: description, coordinate: coordinate)
-        places[id] = place
-        return place
+        let placeDescription = NSEntityDescription.entity(forEntityName: "Place", in: context)!
+        let place = NSManagedObject(entity: placeDescription, insertInto: context)
+        place.setValue(name, forKeyPath: "name")
+        place.setValue(details, forKey: "details")
+        place.setValue(coordinate.latitude, forKey: "latitude")
+        place.setValue(coordinate.longitude, forKey: "longitude")
+        place.setValue(folder, forKey: "folder")
     }
     
-    /// Parse a <Point> XML element
-    private func parseCoordinate(_ coordinate: XMLIndexer) -> CLLocationCoordinate2D {
+    /// Parse a <Point> KML element
+    private func parseCoordinate(_ coordinateKML: XMLIndexer) -> CLLocationCoordinate2D {
         var longitude = 0.0
         var latitude = 0.0
-        for child in coordinate.children.makeIterator() {
-            guard let element = child.element,
-                element.name == "coordinates" else {
-                    continue
-            }
-            let components = element.text.components(separatedBy: ",")
+        if let coordinateText = coordinateKML.textOfFirstChildElement(withName: "coordinates") {
+            let components = coordinateText.components(separatedBy: ",")
             if let parsedLongitude = Double(components[0]), let parsedLatitude = Double(components[1]) {
                 longitude = parsedLongitude
                 latitude = parsedLatitude
             }
         }
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+}
+
+private extension XMLIndexer {
+
+    func firstChildElement(withName name: String) -> XMLIndexer? {
+        return children.first(where: { $0.element?.name == name })
+    }
+
+    func textOfFirstChildElement(withName name: String) -> String? {
+        return firstChildElement(withName: name)?.element?.text
+    }
+}
+
+// MARK: - Convenience
+
+extension Folder {
+
+    var isRootFolder: Bool {
+        return parentFolder == nil
+    }
+}
+
+extension Place {
+
+    var coordinate: CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
 }
