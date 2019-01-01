@@ -19,14 +19,14 @@ final class DataManager {
     static let sharedDataManager = DataManager()
 
     var rootFolder: Folder? {
-        let fetchRequest = NSFetchRequest<Folder>(entityName: "Folder")
+        let fetchRequest: NSFetchRequest<Folder> = Folder.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "parentFolder = nil")
         guard let fetchResults = try? context.fetch(fetchRequest) else { return nil }
         return fetchResults.first
     }
 
     var allPlaces: [Place] {
-        let fetchRequest = NSFetchRequest<Place>(entityName: "Place")
+        let fetchRequest: NSFetchRequest<Place> = Place.fetchRequest()
         guard let fetchResults = try? context.fetch(fetchRequest) else { return [] }
         return fetchResults
     }
@@ -55,7 +55,7 @@ final class DataManager {
     }
 
     func places(matchingText text: String) -> [Place] {
-        let fetchRequest = NSFetchRequest<Place>(entityName: "Place")
+        let fetchRequest: NSFetchRequest<Place> = Place.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "name CONTAINS[cd] %@", text)
         guard let fetchResults = try? context.fetch(fetchRequest) else { return [] }
         return fetchResults
@@ -91,32 +91,31 @@ extension DataManager {
     func parseKMLFile(at url: URL) {
         guard let kmlData = try? Data(contentsOf: url) else { return }
         let kml = SWXMLHash.parse(kmlData)
-        let documentKML = kml["kml"]["Document"]
+        let documentKML = kml[KMLNames.kml][KMLNames.document]
 
-        let documentHasMultipleFolders = documentKML.children.filter({ $0.element?.name == "Folder" }).count > 1
-        let documentHasPlacemarks = documentKML.children.filter({ $0.element?.name == "Placemark" }).count > 0
+        let documentHasMultipleFolders = documentKML.children.filter({ $0.element?.name == KMLNames.folder }).count > 1
+        let documentHasPlacemarks = documentKML.children.filter({ $0.element?.name == KMLNames.placemark }).count > 0
         let shouldCreateNewRootFolder = documentHasPlacemarks || documentHasMultipleFolders
         if shouldCreateNewRootFolder {
-            var documentName = documentKML.textOfFirstChildElement(withName: "name") ?? "My Places"
+            var documentName = documentKML.textOfFirstChildElement(withName: KMLNames.name) ?? "My Places"
             if documentName.hasSuffix(".kml") {
                 documentName = String(documentName.dropLast(4))
             }
-            let folderDescription = NSEntityDescription.entity(forEntityName: "Folder", in: context)!
-            let folder = NSManagedObject(entity: folderDescription, insertInto: context)
-            folder.setValue(documentName, forKeyPath: "name")
+            let folder = NSManagedObject(entity: Folder.entity(), insertInto: context)
+            folder.setValue(documentName, forKey: Folder.Keys.name)
             for child in documentKML.children {
                 guard let element = child.element else { continue }
                 switch element.name {
-                case "Folder":
+                case KMLNames.folder:
                     parseFolder(child, parentFolder: folder)
-                case "Placemark":
+                case KMLNames.placemark:
                     parsePlace(child, folder: folder)
                 default:
                     break
                 }
             }
         } else {
-            let rootFolderKML = documentKML["Folder"]
+            let rootFolderKML = documentKML[KMLNames.folder]
             parseFolder(rootFolderKML)
         }
         saveContext()
@@ -124,19 +123,18 @@ extension DataManager {
     
     /// Parse a <Folder> KML element
     private func parseFolder(_ folderKML: XMLIndexer, parentFolder: NSManagedObject? = nil) {
-        let name = folderKML.textOfFirstChildElement(withName: "name") ?? "Untitled Folder"
-        let folderDescription = NSEntityDescription.entity(forEntityName: "Folder", in: context)!
-        let folder = NSManagedObject(entity: folderDescription, insertInto: context)
-        folder.setValue(name, forKeyPath: "name")
+        let name = folderKML.textOfFirstChildElement(withName: KMLNames.name) ?? "Untitled Folder"
+        let folder = NSManagedObject(entity: Folder.entity(), insertInto: context)
+        folder.setValue(name, forKey: Folder.Keys.name)
         if let parentFolder = parentFolder {
-            folder.setValue(parentFolder, forKey: "parentFolder")
+            folder.setValue(parentFolder, forKey: Folder.Keys.parentFolder)
         }
         for child in folderKML.children {
             guard let element = child.element else { continue }
             switch element.name {
-            case "Folder":
+            case KMLNames.folder:
                 parseFolder(child, parentFolder: folder)
-            case "Placemark":
+            case KMLNames.placemark:
                 parsePlace(child, folder: folder)
             default:
                 break
@@ -146,26 +144,25 @@ extension DataManager {
     
     /// Parse a <Placemark> KML element
     private func parsePlace(_ placeKML: XMLIndexer, folder: NSManagedObject) {
-        let name = placeKML.textOfFirstChildElement(withName: "name") ?? "Untitled Place"
-        let details = placeKML.textOfFirstChildElement(withName: "description") ?? "No Description"
+        let name = placeKML.textOfFirstChildElement(withName: KMLNames.name) ?? "Untitled Place"
+        let details = placeKML.textOfFirstChildElement(withName: KMLNames.description) ?? "No Description"
         var coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-        if let point = placeKML.firstChildElement(withName: "Point") {
+        if let point = placeKML.firstChildElement(withName: KMLNames.point) {
             coordinate = parseCoordinate(point)
         }
-        let placeDescription = NSEntityDescription.entity(forEntityName: "Place", in: context)!
-        let place = NSManagedObject(entity: placeDescription, insertInto: context)
-        place.setValue(name, forKeyPath: "name")
-        place.setValue(details, forKey: "details")
-        place.setValue(coordinate.latitude, forKey: "latitude")
-        place.setValue(coordinate.longitude, forKey: "longitude")
-        place.setValue(folder, forKey: "folder")
+        let place = NSManagedObject(entity: Place.entity(), insertInto: context)
+        place.setValue(name, forKey: Place.Keys.name)
+        place.setValue(details, forKey: Place.Keys.details)
+        place.setValue(coordinate.latitude, forKey: Place.Keys.latitude)
+        place.setValue(coordinate.longitude, forKey: Place.Keys.longitude)
+        place.setValue(folder, forKey: Place.Keys.folder)
     }
     
     /// Parse a <Point> KML element
     private func parseCoordinate(_ coordinateKML: XMLIndexer) -> CLLocationCoordinate2D {
         var longitude = 0.0
         var latitude = 0.0
-        if let coordinateText = coordinateKML.textOfFirstChildElement(withName: "coordinates") {
+        if let coordinateText = coordinateKML.textOfFirstChildElement(withName: KMLNames.coordinates) {
             let components = coordinateText.components(separatedBy: ",")
             if let parsedLongitude = Double(components[0]), let parsedLatitude = Double(components[1]) {
                 longitude = parsedLongitude
@@ -187,9 +184,26 @@ private extension XMLIndexer {
     }
 }
 
+struct KMLNames {
+
+    static let kml: String = "kml"
+    static let document: String = "Document"
+    static let folder: String = "Folder"
+    static let placemark: String = "Placemark"
+    static let name: String = "name"
+    static let description: String = "description"
+    static let point: String = "point"
+    static let coordinates: String = "coordinates"
+}
+
 // MARK: - Convenience
 
 extension Folder {
+
+    struct Keys {
+        static let name: String = "name"
+        static let parentFolder: String = "parentFolder"
+    }
 
     var isRootFolder: Bool {
         return parentFolder == nil
@@ -197,6 +211,14 @@ extension Folder {
 }
 
 extension Place {
+
+    struct Keys {
+        static let name: String = "name"
+        static let details: String = "details"
+        static let latitude: String = "latitude"
+        static let longitude: String = "longitude"
+        static let folder: String = "folder"
+    }
 
     var coordinate: CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
