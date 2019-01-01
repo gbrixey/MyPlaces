@@ -77,7 +77,7 @@ final class MapViewController: UIViewController {
         guard isViewLoaded else { return }
 
         // TODO: recursive
-        let places = (folder?.places?.allObjects as? [Place]) ?? []
+        let places = folder?.flattenedPlacesArray ?? []
         let currentPlacesSet = Set(self.places)
         let newPlacesSet = Set(places)
         let placesToRemove = currentPlacesSet.subtracting(newPlacesSet)

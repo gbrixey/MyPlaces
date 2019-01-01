@@ -208,6 +208,19 @@ extension Folder {
     var isRootFolder: Bool {
         return parentFolder == nil
     }
+
+    var subfoldersArray: [Folder] {
+        return (subfolders?.allObjects as? [Folder]) ?? []
+    }
+
+    var placesArray: [Place] {
+        return (places?.allObjects as? [Place]) ?? []
+    }
+
+    /// Returns all places in the folder hierarchy contained by this folder.
+    var flattenedPlacesArray: [Place] {
+        return subfoldersArray.reduce(placesArray, { $0 + $1.flattenedPlacesArray })
+    }
 }
 
 extension Place {

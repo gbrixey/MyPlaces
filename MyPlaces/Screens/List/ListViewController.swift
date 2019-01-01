@@ -159,11 +159,9 @@ final class ListViewController: UITableViewController {
     }
 
     private func listItems(inFolder folder: Folder?) -> [ListItem] {
-        let subfolders: [Folder] = (folder?.subfolders?.allObjects as? [Folder]) ?? []
-        let subfolderItems = subfolders.map({ listItem(forFolder: $0) }).sorted()
-        let places: [Place] = (folder?.places?.allObjects as? [Place]) ?? []
-        let placeItems = places.map({ listItem(forPlace: $0) }).sorted()
-        var listItems = subfolderItems + placeItems
+        let subfolders = folder?.subfoldersArray.map({ listItem(forFolder: $0) }).sorted() ?? []
+        let placeItems = folder?.placesArray.map({ listItem(forPlace: $0) }).sorted() ?? []
+        var listItems = subfolders + placeItems
         if folder?.isRootFolder ?? false {
             let allPlacesItem = ListItem(itemType: .allPlaces, item: nil, itemName: "All Places", itemDetail: "")
             listItems.insert(allPlacesItem, at: 0)
