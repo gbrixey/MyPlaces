@@ -73,6 +73,11 @@ final class ListViewController: UITableViewController {
         }
     }
 
+    @objc private func refresh() {
+        fetchItems()
+        refreshControl?.endRefreshing()
+    }
+
     // MARK: - Private
 
     private var searchBar: UISearchBar!
@@ -100,6 +105,8 @@ final class ListViewController: UITableViewController {
         searchBar.delegate = self
         searchBar.frame = CGRect(x: 0, y: 0, width: 0, height: searchBar?.intrinsicContentSize.height ?? 56)
         tableView.tableHeaderView = searchBar
+        refreshControl = UIRefreshControl()
+        refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
     }
 
     private func setupNavigationBar() {
