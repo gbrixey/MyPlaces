@@ -90,6 +90,7 @@ extension DataManager {
     /// Attempt to parse the given KML file and store the data in Core Data
     func parseKMLFile(at url: URL) {
         guard let kmlData = try? Data(contentsOf: url) else { return }
+        deleteEverything()
         let kml = SWXMLHash.parse(kmlData)
         let documentKML = kml[KMLNames.kml][KMLNames.document]
 
@@ -119,6 +120,12 @@ extension DataManager {
             parseFolder(rootFolderKML)
         }
         saveContext()
+    }
+
+    /// Deletes everything in Core Data
+    private func deleteEverything() {
+        let _ = try? context.execute(NSBatchDeleteRequest(fetchRequest: Folder.fetchRequest()))
+        let _ = try? context.execute(NSBatchDeleteRequest(fetchRequest: Place.fetchRequest()))
     }
     
     /// Parse a <Folder> KML element
