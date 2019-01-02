@@ -87,7 +87,7 @@ extension DataManager {
 
 extension DataManager {
 
-    /// Attempt to parse the given KML file and 
+    /// Attempt to parse the given KML file and store the data in Core Data
     func parseKMLFile(at url: URL) {
         guard let kmlData = try? Data(contentsOf: url) else { return }
         let kml = SWXMLHash.parse(kmlData)
@@ -101,8 +101,8 @@ extension DataManager {
             if documentName.hasSuffix(".kml") {
                 documentName = String(documentName.dropLast(4))
             }
-            let folder = NSManagedObject(entity: Folder.entity(), insertInto: context)
-            folder.setValue(documentName, forKey: Folder.Keys.name)
+            let folder = Folder(context: context)
+            folder.name = documentName
             for child in documentKML.children {
                 guard let element = child.element else { continue }
                 switch element.name {
@@ -122,13 +122,11 @@ extension DataManager {
     }
     
     /// Parse a <Folder> KML element
-    private func parseFolder(_ folderKML: XMLIndexer, parentFolder: NSManagedObject? = nil) {
+    private func parseFolder(_ folderKML: XMLIndexer, parentFolder: Folder? = nil) {
         let name = folderKML.textOfFirstChildElement(withName: KMLNames.name) ?? "Untitled Folder"
-        let folder = NSManagedObject(entity: Folder.entity(), insertInto: context)
-        folder.setValue(name, forKey: Folder.Keys.name)
-        if let parentFolder = parentFolder {
-            folder.setValue(parentFolder, forKey: Folder.Keys.parentFolder)
-        }
+        let folder = Folder(context: context)
+        folder.name = name
+        folder.parentFolder = parentFolder
         for child in folderKML.children {
             guard let element = child.element else { continue }
             switch element.name {
@@ -143,19 +141,19 @@ extension DataManager {
     }
     
     /// Parse a <Placemark> KML element
-    private func parsePlace(_ placeKML: XMLIndexer, folder: NSManagedObject) {
+    private func parsePlace(_ placeKML: XMLIndexer, folder: Folder) {
         let name = placeKML.textOfFirstChildElement(withName: KMLNames.name) ?? "Untitled Place"
         let details = placeKML.textOfFirstChildElement(withName: KMLNames.description) ?? "No Description"
         var coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
         if let point = placeKML.firstChildElement(withName: KMLNames.point) {
             coordinate = parseCoordinate(point)
         }
-        let place = NSManagedObject(entity: Place.entity(), insertInto: context)
-        place.setValue(name, forKey: Place.Keys.name)
-        place.setValue(details, forKey: Place.Keys.details)
-        place.setValue(coordinate.latitude, forKey: Place.Keys.latitude)
-        place.setValue(coordinate.longitude, forKey: Place.Keys.longitude)
-        place.setValue(folder, forKey: Place.Keys.folder)
+        let place = Place(context: context)
+        place.name = name
+        place.details = details
+        place.latitude = coordinate.latitude
+        place.longitude = coordinate.longitude
+        place.folder = folder
     }
     
     /// Parse a <Point> KML element
@@ -176,7 +174,7 @@ extension DataManager {
 private extension XMLIndexer {
 
     func firstChildElement(withName name: String) -> XMLIndexer? {
-        return children.first(where: { $0.element?.name == name })
+        return children.first(where: { $0.element?.name.lowercased() == name.lowercased() })
     }
 
     func textOfFirstChildElement(withName name: String) -> String? {
@@ -192,18 +190,13 @@ struct KMLNames {
     static let placemark: String = "Placemark"
     static let name: String = "name"
     static let description: String = "description"
-    static let point: String = "point"
+    static let point: String = "Point"
     static let coordinates: String = "coordinates"
 }
 
 // MARK: - Convenience
 
 extension Folder {
-
-    struct Keys {
-        static let name: String = "name"
-        static let parentFolder: String = "parentFolder"
-    }
 
     var isRootFolder: Bool {
         return parentFolder == nil
@@ -217,21 +210,13 @@ extension Folder {
         return (places?.allObjects as? [Place]) ?? []
     }
 
-    /// Returns all places in the folder hierarchy contained by this folder.
+    /// Returns all places in this folder and its descendant folders
     var flattenedPlacesArray: [Place] {
         return subfoldersArray.reduce(placesArray, { $0 + $1.flattenedPlacesArray })
     }
 }
 
 extension Place {
-
-    struct Keys {
-        static let name: String = "name"
-        static let details: String = "details"
-        static let latitude: String = "latitude"
-        static let longitude: String = "longitude"
-        static let folder: String = "folder"
-    }
 
     var coordinate: CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
