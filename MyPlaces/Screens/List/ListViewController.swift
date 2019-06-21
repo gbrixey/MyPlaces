@@ -1,4 +1,5 @@
 import UIKit
+import CoreData
 import CoreLocation
 
 class ListViewController: UITableViewController {
@@ -30,6 +31,10 @@ class ListViewController: UITableViewController {
         setupNavigationBar()
         setupTableView()
         fetchItems()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updatedColors),
+                                               name: ColorViewController.updatedColorsNotification,
+                                               object: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -68,6 +73,31 @@ class ListViewController: UITableViewController {
     @objc private func refresh() {
         fetchItems()
         refreshControl?.endRefreshing()
+    }
+
+    @objc private func updatedColors(_ notification: Notification) {
+        guard let visibleIndexPaths = tableView.indexPathsForVisibleRows else { return }
+        let userInfoKey = ColorViewController.updatedColorsNotificationPlaceIDsUserInfoKey
+        let placeIDs: [NSManagedObjectID] = (notification.userInfo?[userInfoKey] as? [NSManagedObjectID]) ?? []
+        let indexPathsToRefresh = visibleIndexPaths.filter { indexPath -> Bool in
+            let listItem = listItems[indexPath.row]
+            switch listItem.itemType {
+            case .folder:
+                guard let folder = listItem.item as? Folder else { return false }
+                for place in folder.flattenedPlacesArray {
+                    if placeIDs.contains(place.objectID) {
+                        return true
+                    }
+                }
+                return false
+            case .place:
+                guard let place = listItem.item as? Place else { return false }
+                return placeIDs.contains(place.objectID)
+            case .allPlaces:
+                return false
+            }
+        }
+        tableView.reloadRows(at: indexPathsToRefresh, with: .none)
     }
 
     // MARK: - Private
