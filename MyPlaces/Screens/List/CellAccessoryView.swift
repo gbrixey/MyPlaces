@@ -45,8 +45,8 @@ class CellAccessoryView: UIView {
     }
 
     private func dotView(withColor color: UIColor) -> UIView {
-        let dot = UIView.init(frame: .zero)
-        dot.backgroundColor = color
+        let dot = UIImageView.init(image: .image(withColor: color))
+        dot.clipsToBounds = true
         dot.layer.cornerRadius = 8
         dot.widthAnchor.constraint(equalToConstant: 16).isActive = true
         dot.heightAnchor.constraint(equalToConstant: 16).isActive = true

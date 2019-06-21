@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E104FF0422BD712900F502E8 /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E104FF0322BD712900F502E8 /* UIImageExtensions.swift */; };
 		E123857B22BD44840060A8C2 /* ColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E123857922BD44840060A8C2 /* ColorViewController.swift */; };
 		E123857C22BD44840060A8C2 /* ColorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E123857A22BD44840060A8C2 /* ColorViewController.xib */; };
 		E123857E22BD689D0060A8C2 /* CellAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E123857D22BD689D0060A8C2 /* CellAccessoryView.swift */; };
@@ -46,6 +47,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E104FF0322BD712900F502E8 /* UIImageExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
 		E123857922BD44840060A8C2 /* ColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorViewController.swift; sourceTree = "<group>"; };
 		E123857A22BD44840060A8C2 /* ColorViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ColorViewController.xib; sourceTree = "<group>"; };
 		E123857D22BD689D0060A8C2 /* CellAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellAccessoryView.swift; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				E1C42D911ED1EDEF00EFDF36 /* UIColorExtensions.swift */,
+				E104FF0322BD712900F502E8 /* UIImageExtensions.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -281,6 +284,7 @@
 				E1E051691ECFB64000D2CC30 /* ListViewController.swift in Sources */,
 				E1E051D71ED139D500D2CC30 /* LocationManager.swift in Sources */,
 				E15FCD2321DA646B00C8F72D /* RootViewController.swift in Sources */,
+				E104FF0422BD712900F502E8 /* UIImageExtensions.swift in Sources */,
 				E1E051D31ED101C600D2CC30 /* MapAnnotation.swift in Sources */,
 				E123857B22BD44840060A8C2 /* ColorViewController.swift in Sources */,
 				E1E0516E1ECFB8A700D2CC30 /* DataManager.swift in Sources */,
