@@ -34,11 +34,11 @@ final class DetailsViewController: UIViewController {
 
     // MARK: - Private
 
+    @IBOutlet private var contentView: UIView!
     @IBOutlet private var nameLabel: UILabel!
     @IBOutlet private var descriptionLabel: UILabel!
     @IBOutlet private var mapImageView: UIImageView!
     @IBOutlet private var activityIndicator: UIActivityIndicatorView!
-    @IBOutlet private var pinImageView: UIImageView!
 
     private var place: Place
 
@@ -55,7 +55,19 @@ final class DetailsViewController: UIViewController {
             guard let strongSelf = self, let snapshot = snapshot else { return }
             strongSelf.activityIndicator.stopAnimating()
             strongSelf.mapImageView.image = snapshot.image
-            strongSelf.pinImageView.isHidden = false
+            strongSelf.addPinView()
         }
+    }
+
+    private func addPinView() {
+        let pinView = MKPinAnnotationView(annotation: nil, reuseIdentifier: nil)
+        pinView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(pinView)
+        pinView.centerXAnchor.constraint(equalTo: mapImageView.centerXAnchor,
+                                         constant: pinView.centerOffset.x).isActive = true
+        pinView.centerYAnchor.constraint(equalTo: mapImageView.centerYAnchor,
+                                         constant: pinView.centerOffset.y).isActive = true
+        pinView.heightAnchor.constraint(equalToConstant: 39).isActive = true
+        pinView.widthAnchor.constraint(equalToConstant: 32).isActive = true
     }
 }

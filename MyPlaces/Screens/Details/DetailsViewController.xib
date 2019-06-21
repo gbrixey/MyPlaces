@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -12,10 +12,10 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DetailsViewController" customModule="MyPlaces" customModuleProvider="target">
             <connections>
                 <outlet property="activityIndicator" destination="qJ2-Ah-rim" id="bOS-2e-AR4"/>
+                <outlet property="contentView" destination="hS9-Q1-Yjf" id="6nU-79-Wzj"/>
                 <outlet property="descriptionLabel" destination="n5k-cF-R5I" id="CbK-EW-imQ"/>
                 <outlet property="mapImageView" destination="dQN-TG-ySF" id="DCL-f3-KCr"/>
                 <outlet property="nameLabel" destination="p9D-KO-aex" id="EXI-Xg-mP2"/>
-                <outlet property="pinImageView" destination="Yx9-SF-hV3" id="qqP-u2-oWk"/>
                 <outlet property="view" destination="iN0-l3-epB" id="AQc-L7-7Za"/>
             </connections>
         </placeholder>
@@ -57,15 +57,10 @@
                                 <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="qJ2-Ah-rim">
                                     <rect key="frame" x="177.5" y="150.5" width="20" height="20"/>
                                 </activityIndicatorView>
-                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="map-icon" translatesAutoresizingMaskIntoConstraints="NO" id="Yx9-SF-hV3">
-                                    <rect key="frame" x="179.5" y="136.5" width="16" height="24"/>
-                                </imageView>
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstItem="Yx9-SF-hV3" firstAttribute="centerY" secondItem="dQN-TG-ySF" secondAttribute="centerY" constant="-12" id="Cgu-Uh-rUT"/>
                                 <constraint firstAttribute="trailing" secondItem="bqo-lC-VTu" secondAttribute="trailing" constant="20" id="D7M-jH-LDO"/>
-                                <constraint firstItem="Yx9-SF-hV3" firstAttribute="centerX" secondItem="dQN-TG-ySF" secondAttribute="centerX" id="Kl8-h0-Yv7"/>
                                 <constraint firstItem="qJ2-Ah-rim" firstAttribute="centerY" secondItem="dQN-TG-ySF" secondAttribute="centerY" id="L2K-m7-bNO"/>
                                 <constraint firstItem="qJ2-Ah-rim" firstAttribute="centerX" secondItem="dQN-TG-ySF" secondAttribute="centerX" id="NV1-c5-6Eu"/>
                                 <constraint firstAttribute="bottom" secondItem="bqo-lC-VTu" secondAttribute="bottom" constant="20" id="Pbn-eo-2WM"/>
@@ -94,7 +89,4 @@
             <viewLayoutGuide key="safeArea" id="PTR-Ot-iQX"/>
         </view>
     </objects>
-    <resources>
-        <image name="map-icon" width="16" height="24"/>
-    </resources>
 </document>
