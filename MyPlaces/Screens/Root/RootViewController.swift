@@ -1,11 +1,3 @@
-//
-//  RootViewController.swift
-//  MyPlaces
-//
-//  Created by Glen Brixey on 12/31/18.
-//  Copyright © 2018 Glen Brixey. All rights reserved.
-//
-
 import UIKit
 
 class RootViewController: UITabBarController {

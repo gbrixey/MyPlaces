@@ -1,11 +1,3 @@
-//
-//  DataManager.swift
-//  MyPlaces
-//
-//  Created by Glen Brixey on 5/19/17.
-//  Copyright © 2017 Glen Brixey. All rights reserved.
-//
-
 import MapKit
 import CoreData
 import SWXMLHash

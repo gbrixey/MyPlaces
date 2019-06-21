@@ -1,11 +1,3 @@
-//
-//  LocationManager.swift
-//  MyPlaces
-//
-//  Created by Glen Brixey on 5/20/17.
-//  Copyright © 2017 Glen Brixey. All rights reserved.
-//
-
 import CoreLocation
 
 /// Class responsible for finding the user's current location
