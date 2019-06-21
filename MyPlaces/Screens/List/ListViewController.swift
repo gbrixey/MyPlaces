@@ -231,6 +231,39 @@ extension ListViewController {
             searchMode = .allPlaces
         }
     }
+
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        let listItem = listItems[indexPath.row]
+        switch listItem.itemType {
+        case .folder, .place:
+            return .delete
+        case .allPlaces:
+            return .none
+        }
+    }
+
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let listItem = listItems[indexPath.row]
+        switch listItem.itemType {
+        case .folder, .place:
+            guard let item = listItem.item else { return nil }
+            let setColorAction = UIContextualAction(style: .normal, title: "Set Color", handler: { [weak self] (_, _, completion) in
+                guard let strongSelf = self else {
+                    completion(false)
+                    return
+                }
+                let colorVC = ColorViewController(item: item)
+                strongSelf.navigationController?.pushViewController(colorVC, animated: true)
+                completion(true)
+            })
+            setColorAction.backgroundColor = .systemBlue
+            let swipeActionsConfiguration = UISwipeActionsConfiguration(actions: [setColorAction])
+            swipeActionsConfiguration.performsFirstActionWithFullSwipe = false
+            return swipeActionsConfiguration
+        case .allPlaces:
+            return nil
+        }
+    }
 }
 
 // MARK: - UISearchBarDelegate
