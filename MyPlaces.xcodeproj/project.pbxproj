@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E123857B22BD44840060A8C2 /* ColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E123857922BD44840060A8C2 /* ColorViewController.swift */; };
+		E123857C22BD44840060A8C2 /* ColorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E123857A22BD44840060A8C2 /* ColorViewController.xib */; };
 		E12773BA1ED1F13D00BBE850 /* AppearanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E12773B91ED1F13D00BBE850 /* AppearanceManager.swift */; };
 		E15FCD2321DA646B00C8F72D /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15FCD2221DA646B00C8F72D /* RootViewController.swift */; };
 		E15FCD3621DAC7E000C8F72D /* MyPlaces.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E15FCD3421DAC7E000C8F72D /* MyPlaces.xcdatamodeld */; };
@@ -43,6 +45,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E123857922BD44840060A8C2 /* ColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorViewController.swift; sourceTree = "<group>"; };
+		E123857A22BD44840060A8C2 /* ColorViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ColorViewController.xib; sourceTree = "<group>"; };
 		E12773B91ED1F13D00BBE850 /* AppearanceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearanceManager.swift; sourceTree = "<group>"; };
 		E15FCD2221DA646B00C8F72D /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		E15FCD3521DAC7E000C8F72D /* MyPlaces.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MyPlaces.xcdatamodel; sourceTree = "<group>"; };
@@ -77,6 +81,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E123857822BD446B0060A8C2 /* Color */ = {
+			isa = PBXGroup;
+			children = (
+				E123857922BD44840060A8C2 /* ColorViewController.swift */,
+				E123857A22BD44840060A8C2 /* ColorViewController.xib */,
+			);
+			path = Color;
+			sourceTree = "<group>";
+		};
 		E152F0E921D57E6100144436 /* Core */ = {
 			isa = PBXGroup;
 			children = (
@@ -98,6 +111,7 @@
 		E152F0EB21D57E8300144436 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				E123857822BD446B0060A8C2 /* Color */,
 				E152F0ED21D57E9600144436 /* Details */,
 				E152F0EE21D57E9F00144436 /* List */,
 				E152F0EF21D57EA500144436 /* Map */,
@@ -227,6 +241,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -248,6 +263,7 @@
 				E1E051981ED09D9000D2CC30 /* Launch.storyboard in Resources */,
 				E1E0513E1ECFB43000D2CC30 /* Assets.xcassets in Resources */,
 				E1E051CF1ED0F09E00D2CC30 /* MapViewController.xib in Resources */,
+				E123857C22BD44840060A8C2 /* ColorViewController.xib in Resources */,
 				E1E051B41ED0E03100D2CC30 /* DetailsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -263,6 +279,7 @@
 				E1E051D71ED139D500D2CC30 /* LocationManager.swift in Sources */,
 				E15FCD2321DA646B00C8F72D /* RootViewController.swift in Sources */,
 				E1E051D31ED101C600D2CC30 /* MapAnnotation.swift in Sources */,
+				E123857B22BD44840060A8C2 /* ColorViewController.swift in Sources */,
 				E1E0516E1ECFB8A700D2CC30 /* DataManager.swift in Sources */,
 				E15FCD3621DAC7E000C8F72D /* MyPlaces.xcdatamodeld in Sources */,
 				E1C153B121D6D89700384550 /* ListItem.swift in Sources */,
