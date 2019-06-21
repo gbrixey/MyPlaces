@@ -61,6 +61,7 @@ class DetailsViewController: UIViewController {
 
     private func addPinView() {
         let pinView = MKPinAnnotationView(annotation: nil, reuseIdentifier: nil)
+        pinView.pinTintColor = UIColor(hex: place.hexColor)
         pinView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(pinView)
         pinView.centerXAnchor.constraint(equalTo: mapImageView.centerXAnchor,

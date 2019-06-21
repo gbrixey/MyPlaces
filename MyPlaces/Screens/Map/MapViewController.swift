@@ -123,17 +123,18 @@ class MapViewController: UIViewController {
 extension MapViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        if annotation.isKind(of: MKUserLocation.self) { return nil }
-        var annotationView: MKAnnotationView
-        if let reusableAnnotationView = mapView.dequeueReusableAnnotationView(withIdentifier: annotationIdentifier) {
+        guard let mapAnnotation = annotation as? MapAnnotation else { return nil }
+        var annotationView: MKPinAnnotationView
+        if let reusableAnnotationView = mapView.dequeueReusableAnnotationView(withIdentifier: annotationIdentifier) as? MKPinAnnotationView {
             annotationView = reusableAnnotationView
             annotationView.annotation = annotation
         } else {
             annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: annotationIdentifier)
+            let button = UIButton(type: .detailDisclosure)
+            annotationView.rightCalloutAccessoryView = button
+            annotationView.canShowCallout = true
         }
-        let button = UIButton(type: .detailDisclosure)
-        annotationView.rightCalloutAccessoryView = button
-        annotationView.canShowCallout = true
+        annotationView.pinTintColor = mapAnnotation.color
         return annotationView
     }
     

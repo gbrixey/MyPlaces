@@ -21,6 +21,10 @@ class MapAnnotation: NSObject, MKAnnotation {
     var title: String? {
         return place.name
     }
+
+    var color: UIColor {
+        return UIColor(hex: place.hexColor)
+    }
     
     init(place: Place) {
         self.place = place
