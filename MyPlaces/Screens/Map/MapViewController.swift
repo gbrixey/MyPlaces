@@ -49,6 +49,10 @@ final class MapViewController: UIViewController {
         let newTrackingMode: MKUserTrackingMode = mapView.userTrackingMode == .none ? .followWithHeading : .none
         mapView.setUserTrackingMode(newTrackingMode, animated: true)
     }
+
+    @objc private func dismissDetails() {
+        dismiss(animated: true, completion: nil)
+    }
     
     // MARK: - Private
 
@@ -136,7 +140,10 @@ extension MapViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         let annotation = view.annotation as! MapAnnotation
         let detailsVC = DetailsViewController(place: annotation.place)
-        navigationController?.pushViewController(detailsVC, animated: true)
+        let closeImage = #imageLiteral(resourceName: "close_gray").withRenderingMode(.alwaysTemplate)
+        detailsVC.navigationItem.leftBarButtonItem = UIBarButtonItem(image: closeImage, style: .plain, target: self, action: #selector(dismissDetails))
+        let detailsNav = UINavigationController(rootViewController: detailsVC)
+        present(detailsNav, animated: true, completion: nil)
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
