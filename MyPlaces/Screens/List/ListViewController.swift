@@ -198,10 +198,11 @@ extension ListViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) ?? UITableViewCell(style: .subtitle, reuseIdentifier: cellIdentifier)
-        let item = listItems[indexPath.row]
-        cell.textLabel?.text = item.itemName
-        cell.textLabel?.textColor = item.itemType == .folder ? UIColor.systemBlue : UIColor.black
-        cell.detailTextLabel?.text = item.itemDetail
+        let listItem = listItems[indexPath.row]
+        cell.textLabel?.text = listItem.itemName
+        cell.textLabel?.textColor = listItem.itemType == .folder ? UIColor.systemBlue : UIColor.black
+        cell.detailTextLabel?.text = listItem.itemDetail
+        cell.accessoryView = listItem.item != nil ? CellAccessoryView(item: listItem.item!) : nil
         return cell
     }
 }

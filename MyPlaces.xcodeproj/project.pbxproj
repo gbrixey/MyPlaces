@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		E123857B22BD44840060A8C2 /* ColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E123857922BD44840060A8C2 /* ColorViewController.swift */; };
 		E123857C22BD44840060A8C2 /* ColorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E123857A22BD44840060A8C2 /* ColorViewController.xib */; };
+		E123857E22BD689D0060A8C2 /* CellAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E123857D22BD689D0060A8C2 /* CellAccessoryView.swift */; };
 		E12773BA1ED1F13D00BBE850 /* AppearanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E12773B91ED1F13D00BBE850 /* AppearanceManager.swift */; };
 		E15FCD2321DA646B00C8F72D /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15FCD2221DA646B00C8F72D /* RootViewController.swift */; };
 		E15FCD3621DAC7E000C8F72D /* MyPlaces.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E15FCD3421DAC7E000C8F72D /* MyPlaces.xcdatamodeld */; };
@@ -47,6 +48,7 @@
 /* Begin PBXFileReference section */
 		E123857922BD44840060A8C2 /* ColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorViewController.swift; sourceTree = "<group>"; };
 		E123857A22BD44840060A8C2 /* ColorViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ColorViewController.xib; sourceTree = "<group>"; };
+		E123857D22BD689D0060A8C2 /* CellAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellAccessoryView.swift; sourceTree = "<group>"; };
 		E12773B91ED1F13D00BBE850 /* AppearanceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearanceManager.swift; sourceTree = "<group>"; };
 		E15FCD2221DA646B00C8F72D /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		E15FCD3521DAC7E000C8F72D /* MyPlaces.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MyPlaces.xcdatamodel; sourceTree = "<group>"; };
@@ -135,6 +137,7 @@
 				E1E051671ECFB64000D2CC30 /* ListViewController.swift */,
 				E1C153B021D6D89700384550 /* ListItem.swift */,
 				E1C153B221D6DB4F00384550 /* ListSearchMode.swift */,
+				E123857D22BD689D0060A8C2 /* CellAccessoryView.swift */,
 			);
 			path = List;
 			sourceTree = "<group>";
@@ -288,6 +291,7 @@
 				E1E051CA1ED0E9DB00D2CC30 /* MapViewController.swift in Sources */,
 				E1E051371ECFB43000D2CC30 /* AppDelegate.swift in Sources */,
 				E1E051A41ED0AE5700D2CC30 /* DetailsViewController.swift in Sources */,
+				E123857E22BD689D0060A8C2 /* CellAccessoryView.swift in Sources */,
 				E12773BA1ED1F13D00BBE850 /* AppearanceManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
