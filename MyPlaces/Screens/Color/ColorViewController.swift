@@ -6,6 +6,9 @@ class ColorViewController: UIViewController {
 
     // MARK: - Public
 
+    static let updatedColorsNotification: Notification.Name = Notification.Name("com.glenb.MyPlaces.updatedColors")
+    static let updatedColorsNotificationPlaceIDsUserInfoKey = "com.glenb.MyPlaces.updatedColors.placeIDs"
+
     init(item: NSManagedObject) {
         self.item = item
         super.init(nibName: nil, bundle: nil)
@@ -33,13 +36,7 @@ class ColorViewController: UIViewController {
     }
 
     @objc private func doneButtonTapped() {
-        let hexColor = Int32(redSlider.intValue << 16 + greenSlider.intValue << 8 + blueSlider.intValue)
-        if let place = item as? Place {
-            place.hexColor = hexColor
-        } else if let folder = item as? Folder {
-            folder.flattenedPlacesArray.forEach({ $0.hexColor = hexColor })
-        }
-        DataManager.sharedDataManager.saveContext()
+        updateItemColor()
         navigationController?.popViewController(animated: true)
     }
 
@@ -129,6 +126,24 @@ class ColorViewController: UIViewController {
         blueSlider.value = Float(blue)
         blueField.text = "\(blue)"
         updateColorView()
+    }
+
+    /// Updates the color of `item` based on the current view state.
+    private func updateItemColor() {
+        let hexColor = Int32(redSlider.intValue << 16 + greenSlider.intValue << 8 + blueSlider.intValue)
+        var places: [Place] = []
+        if let place = item as? Place {
+            places = [place]
+        } else if let folder = item as? Folder {
+            places = folder.flattenedPlacesArray
+        }
+        guard places.count > 0 else { return }
+        places.forEach({ $0.hexColor = hexColor })
+        DataManager.sharedDataManager.saveContext()
+        NotificationCenter.default.post(
+            name: ColorViewController.updatedColorsNotification,
+            object: nil,
+            userInfo: [ColorViewController.updatedColorsNotificationPlaceIDsUserInfoKey: places.map({ $0.objectID })])
     }
 }
 

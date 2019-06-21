@@ -7,6 +7,7 @@
 //
 
 import MapKit
+import CoreData
 
 class MapViewController: UIViewController {
 
@@ -33,9 +34,12 @@ class MapViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Map"
         setupNavigationBar()
         fetchItems()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updatedColors),
+                                               name: ColorViewController.updatedColorsNotification,
+                                               object: nil)
     }
     
     // MARK: - Actions
@@ -52,6 +56,18 @@ class MapViewController: UIViewController {
 
     @objc private func dismissDetails() {
         dismiss(animated: true, completion: nil)
+    }
+
+    @objc private func updatedColors(_ notification: Notification) {
+        let userInfoKey = ColorViewController.updatedColorsNotificationPlaceIDsUserInfoKey
+        let placeIDs: [NSManagedObjectID] = (notification.userInfo?[userInfoKey] as? [NSManagedObjectID]) ?? []
+        let matchingAnnotations = mapView.annotations.filter { annotation -> Bool in
+            guard let mapAnnotation = annotation as? MapAnnotation else { return false }
+            return placeIDs.contains(mapAnnotation.place.objectID)
+        }
+        // Remove and re-add the annotations to refresh the annotation views.
+        mapView.removeAnnotations(matchingAnnotations)
+        mapView.addAnnotations(matchingAnnotations)
     }
     
     // MARK: - Private
@@ -73,6 +89,7 @@ class MapViewController: UIViewController {
     }
 
     private func updateNavigationBar() {
+        title = "Map"
         navigationItem.title = folder?.name ?? title
         navigationItem.leftBarButtonItem = (folder == nil || folder!.isRootFolder) ? nil : resetButtonItem
     }
@@ -80,7 +97,6 @@ class MapViewController: UIViewController {
     private func fetchItems() {
         guard isViewLoaded else { return }
 
-        // TODO: recursive
         let places = folder?.flattenedPlacesArray ?? []
         let currentPlacesSet = Set(self.places)
         let newPlacesSet = Set(places)
@@ -90,10 +106,7 @@ class MapViewController: UIViewController {
 
         // Update map annotations
         let annotationsToRemove = mapView.annotations.filter({ (annotation: MKAnnotation) -> Bool in
-            if annotation.isKind(of: MKUserLocation.self) {
-                return false
-            }
-            let mapAnnotation = annotation as! MapAnnotation
+            guard let mapAnnotation = annotation as? MapAnnotation else { return false }
             return placesToRemove.contains(mapAnnotation.place)
         })
         mapView.removeAnnotations(annotationsToRemove)
