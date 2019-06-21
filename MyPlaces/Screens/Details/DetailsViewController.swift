@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 
 /// View showing details about a Google Earth placemark
-final class DetailsViewController: UIViewController {
+class DetailsViewController: UIViewController {
 
     init(place: Place) {
         self.place = place

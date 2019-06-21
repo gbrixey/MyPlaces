@@ -9,7 +9,7 @@
 import UIKit
 import CoreLocation
 
-final class ListViewController: UITableViewController {
+class ListViewController: UITableViewController {
 
     // MARK: - Public
 

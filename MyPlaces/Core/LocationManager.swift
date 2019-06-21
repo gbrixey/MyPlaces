@@ -9,7 +9,7 @@
 import CoreLocation
 
 /// Class responsible for finding the user's current location
-final class LocationManager: NSObject {
+class LocationManager: NSObject {
 
     // MARK: - Public
     

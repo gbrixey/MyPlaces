@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class RootViewController: UITabBarController {
+class RootViewController: UITabBarController {
 
     // MARK: - Overrides
 

@@ -12,7 +12,7 @@ import SWXMLHash
 
 /// Class that manages Google Earth place data.
 /// The data is parsed from a KML file and stored in Core Data.
-final class DataManager {
+class DataManager {
 
     // MARK: - Public
 

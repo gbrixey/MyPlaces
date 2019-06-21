@@ -8,7 +8,7 @@
 
 import MapKit
 
-final class MapViewController: UIViewController {
+class MapViewController: UIViewController {
 
     // MARK: - Public
 
