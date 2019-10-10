@@ -12,10 +12,12 @@ class RootViewController: UITabBarController {
         listVC = ListViewController(searchMode: .folder(folder: rootFolder))
         listVC.tabBarItem = UITabBarItem(title: "List", image: #imageLiteral(resourceName: "list-icon"), selectedImage: nil)
         let listNav = UINavigationController(rootViewController: listVC)
+        listNav.navigationBar.standardAppearance = AppearanceManager.navBarAppearance
 
         mapVC = MapViewController(folder: rootFolder)
         mapVC.tabBarItem = UITabBarItem(title: "Map", image: #imageLiteral(resourceName: "map-icon"), selectedImage: nil)
         let mapNav = UINavigationController(rootViewController: mapVC)
+        mapNav.navigationBar.standardAppearance = AppearanceManager.navBarAppearance
 
         viewControllers = [listNav, mapNav]
     }

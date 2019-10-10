@@ -81,7 +81,9 @@ extension DataManager {
 
     /// Attempt to parse the given KML file and store the data in Core Data
     func parseKMLFile(at url: URL) {
-        guard let kmlData = try? Data(contentsOf: url) else { return }
+        guard url.startAccessingSecurityScopedResource(),
+            let kmlData = try? Data(contentsOf: url) else { return }
+        url.stopAccessingSecurityScopedResource()
         deleteEverything()
         let kml = SWXMLHash.parse(kmlData)
         let documentKML = kml[KMLNames.kml][KMLNames.document]

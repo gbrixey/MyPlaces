@@ -45,7 +45,7 @@ class ListViewController: UITableViewController {
     // MARK: - Actions
 
     @objc private func uploadButtonTapped() {
-        let documentPicker = UIDocumentPickerViewController(documentTypes: ["public.kml"], in: .import)
+        let documentPicker = UIDocumentPickerViewController(documentTypes: ["public.kml"], in: .open)
         documentPicker.delegate = self
         documentPicker.allowsMultipleSelection = false
         present(documentPicker, animated: true, completion: nil)
@@ -142,7 +142,7 @@ class ListViewController: UITableViewController {
         nearbyButton.setImage(#imageLiteral(resourceName: "location-arrow-white").withRenderingMode(.alwaysTemplate), for: .normal)
         nearbyButton.setImage(#imageLiteral(resourceName: "location-arrow-white").withRenderingMode(.alwaysOriginal), for: .selected)
         nearbyButton.setBackgroundImage(nil, for: .normal)
-        nearbyButton.setBackgroundImage(#imageLiteral(resourceName: "one_pixel_007AFF"), for: .selected)
+        nearbyButton.setBackgroundImage(UIImage.image(withColor: .systemBlue), for: .selected)
         nearbyButton.contentEdgeInsets = UIEdgeInsets(top: 6, left: 5, bottom: 5, right: 7)
         nearbyButton.layer.cornerRadius = 10
         nearbyButton.addTarget(self, action: #selector(nearbyButtonTapped), for: .touchUpInside)
@@ -230,7 +230,7 @@ extension ListViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) ?? UITableViewCell(style: .subtitle, reuseIdentifier: cellIdentifier)
         let listItem = listItems[indexPath.row]
         cell.textLabel?.text = listItem.itemName
-        cell.textLabel?.textColor = listItem.itemType == .folder ? UIColor.systemBlue : UIColor.black
+        cell.textLabel?.textColor = listItem.itemType == .folder ? .systemBlue : .label
         cell.detailTextLabel?.text = listItem.itemDetail
         cell.accessoryView = listItem.item != nil ? CellAccessoryView(item: listItem.item!) : nil
         return cell

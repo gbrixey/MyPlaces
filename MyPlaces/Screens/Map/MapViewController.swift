@@ -149,6 +149,7 @@ extension MapViewController: MKMapViewDelegate {
         let closeImage = #imageLiteral(resourceName: "close_gray").withRenderingMode(.alwaysTemplate)
         detailsVC.navigationItem.leftBarButtonItem = UIBarButtonItem(image: closeImage, style: .plain, target: self, action: #selector(dismissDetails))
         let detailsNav = UINavigationController(rootViewController: detailsVC)
+        detailsNav.navigationBar.standardAppearance = AppearanceManager.navBarAppearance
         present(detailsNav, animated: true, completion: nil)
     }
     

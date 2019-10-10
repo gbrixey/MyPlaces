@@ -39,7 +39,7 @@ class DetailsViewController: UIViewController {
         options.region = MKCoordinateRegion(center: place.coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
         options.mapType = .standard
         options.showsBuildings = false
-        options.showsPointsOfInterest = false
+        options.pointOfInterestFilter = .excludingAll
         options.size = CGSize(width: max(UIScreen.main.bounds.width, UIScreen.main.bounds.height), height: 200)
         let mapSnapshotter = MKMapSnapshotter(options: options)
         activityIndicator.startAnimating()
