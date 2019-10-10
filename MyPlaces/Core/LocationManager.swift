@@ -53,6 +53,8 @@ extension LocationManager: CLLocationManagerDelegate {
             manager.startUpdatingLocation()
         case .notDetermined, .restricted, .denied:
             manager.stopUpdatingLocation()
+        @unknown default:
+            manager.stopUpdatingLocation()
         }
     }
 }
