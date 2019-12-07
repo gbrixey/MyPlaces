@@ -42,7 +42,7 @@
 		E1C153B021D6D89700384550 /* ListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItem.swift; sourceTree = "<group>"; };
 		E1C153B221D6DB4F00384550 /* ListSearchMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListSearchMode.swift; sourceTree = "<group>"; };
 		E1C42D911ED1EDEF00EFDF36 /* UIColorExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorExtensions.swift; sourceTree = "<group>"; };
-		E1E051331ECFB43000D2CC30 /* MyPlaces.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyPlaces.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1E051331ECFB43000D2CC30 /* KMLPlaces.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KMLPlaces.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1E051361ECFB43000D2CC30 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E1E0513D1ECFB43000D2CC30 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E1E051421ECFB43000D2CC30 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -160,7 +160,7 @@
 		E1E051341ECFB43000D2CC30 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E1E051331ECFB43000D2CC30 /* MyPlaces.app */,
+				E1E051331ECFB43000D2CC30 /* KMLPlaces.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -206,7 +206,7 @@
 			);
 			name = MyPlaces;
 			productName = MyPlaces;
-			productReference = E1E051331ECFB43000D2CC30 /* MyPlaces.app */;
+			productReference = E1E051331ECFB43000D2CC30 /* KMLPlaces.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -221,7 +221,7 @@
 				TargetAttributes = {
 					E1E051321ECFB43000D2CC30 = {
 						CreatedOnToolsVersion = 8.3.2;
-						DevelopmentTeam = CXX7YE89XK;
+						DevelopmentTeam = W23Z7PC8J5;
 						LastSwiftMigration = 1110;
 						ProvisioningStyle = Automatic;
 					};
@@ -427,15 +427,16 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CXX7YE89XK;
+				DEVELOPMENT_TEAM = W23Z7PC8J5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = MyPlaces/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.glenb.MyPlaces;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				MARKETING_VERSION = 1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.glenb.MyKMLPlaces;
+				PRODUCT_NAME = KMLPlaces;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 5.0;
@@ -449,15 +450,16 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CXX7YE89XK;
+				DEVELOPMENT_TEAM = W23Z7PC8J5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = MyPlaces/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.glenb.MyPlaces;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				MARKETING_VERSION = 1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.glenb.MyKMLPlaces;
+				PRODUCT_NAME = KMLPlaces;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 5.0;
