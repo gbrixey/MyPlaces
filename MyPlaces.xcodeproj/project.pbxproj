@@ -3,11 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		E104FF0422BD712900F502E8 /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E104FF0322BD712900F502E8 /* UIImageExtensions.swift */; };
+		E120C1B62679389000CB9355 /* SWXMLHash in Frameworks */ = {isa = PBXBuildFile; productRef = E120C1B52679389000CB9355 /* SWXMLHash */; };
 		E123857B22BD44840060A8C2 /* ColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E123857922BD44840060A8C2 /* ColorViewController.swift */; };
 		E123857C22BD44840060A8C2 /* ColorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E123857A22BD44840060A8C2 /* ColorViewController.xib */; };
 		E123857E22BD689D0060A8C2 /* CellAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E123857D22BD689D0060A8C2 /* CellAccessoryView.swift */; };
@@ -21,7 +22,6 @@
 		E1E0513E1ECFB43000D2CC30 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1E0513D1ECFB43000D2CC30 /* Assets.xcassets */; };
 		E1E051691ECFB64000D2CC30 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E051671ECFB64000D2CC30 /* ListViewController.swift */; };
 		E1E0516E1ECFB8A700D2CC30 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E0516D1ECFB8A700D2CC30 /* DataManager.swift */; };
-		E1E051791ECFC33F00D2CC30 /* SWXMLHash.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1E051741ECFC19800D2CC30 /* SWXMLHash.framework */; };
 		E1E051981ED09D9000D2CC30 /* Launch.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1E051971ED09D9000D2CC30 /* Launch.storyboard */; };
 		E1E051A41ED0AE5700D2CC30 /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E051A31ED0AE5700D2CC30 /* DetailsViewController.swift */; };
 		E1E051B41ED0E03100D2CC30 /* DetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E1E051B31ED0E03100D2CC30 /* DetailsViewController.xib */; };
@@ -63,7 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E1E051791ECFC33F00D2CC30 /* SWXMLHash.framework in Frameworks */,
+				E120C1B62679389000CB9355 /* SWXMLHash in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -196,7 +196,6 @@
 			buildConfigurationList = E1E0515B1ECFB43000D2CC30 /* Build configuration list for PBXNativeTarget "MyPlaces" */;
 			buildPhases = (
 				E1E0512F1ECFB43000D2CC30 /* Sources */,
-				E1AB4393234F99A800E46083 /* Copy Carthage Frameworks */,
 				E1E051301ECFB43000D2CC30 /* Frameworks */,
 				E1E051311ECFB43000D2CC30 /* Resources */,
 			);
@@ -205,6 +204,9 @@
 			dependencies = (
 			);
 			name = MyPlaces;
+			packageProductDependencies = (
+				E120C1B52679389000CB9355 /* SWXMLHash */,
+			);
 			productName = MyPlaces;
 			productReference = E1E051331ECFB43000D2CC30 /* KMLPlaces.app */;
 			productType = "com.apple.product-type.application";
@@ -236,6 +238,9 @@
 				Base,
 			);
 			mainGroup = E1E0512A1ECFB43000D2CC30;
+			packageReferences = (
+				E120C1B42679389000CB9355 /* XCRemoteSwiftPackageReference "SWXMLHash" */,
+			);
 			productRefGroup = E1E051341ECFB43000D2CC30 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -259,28 +264,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		E1AB4393234F99A800E46083 /* Copy Carthage Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/SWXMLHash.framework",
-			);
-			name = "Copy Carthage Frameworks";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		E1E0512F1ECFB43000D2CC30 /* Sources */ = {
@@ -414,7 +397,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -429,12 +413,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = W23Z7PC8J5;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = MyPlaces/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.glenb.MyKMLPlaces;
 				PRODUCT_NAME = KMLPlaces;
@@ -453,12 +437,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = W23Z7PC8J5;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = MyPlaces/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.glenb.MyKMLPlaces;
 				PRODUCT_NAME = KMLPlaces;
@@ -490,6 +474,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E120C1B42679389000CB9355 /* XCRemoteSwiftPackageReference "SWXMLHash" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/drmohundro/SWXMLHash.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E120C1B52679389000CB9355 /* SWXMLHash */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E120C1B42679389000CB9355 /* XCRemoteSwiftPackageReference "SWXMLHash" */;
+			productName = SWXMLHash;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		E15FCD3421DAC7E000C8F72D /* MyPlaces.xcdatamodeld */ = {
