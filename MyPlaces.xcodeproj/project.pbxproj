@@ -14,14 +14,14 @@
 		E123857E22BD689D0060A8C2 /* CellAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E123857D22BD689D0060A8C2 /* CellAccessoryView.swift */; };
 		E12773BA1ED1F13D00BBE850 /* AppearanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E12773B91ED1F13D00BBE850 /* AppearanceManager.swift */; };
 		E15FCD2321DA646B00C8F72D /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15FCD2221DA646B00C8F72D /* RootViewController.swift */; };
-		E15FCD3621DAC7E000C8F72D /* MyPlaces.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E15FCD3421DAC7E000C8F72D /* MyPlaces.xcdatamodeld */; };
+		E16AB8DA267A7D7100029665 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E0516D1ECFB8A700D2CC30 /* DataManager.swift */; };
+		E16AB8DB267A7F2200029665 /* MyPlaces.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E15FCD3421DAC7E000C8F72D /* MyPlaces.xcdatamodeld */; };
 		E1C153B121D6D89700384550 /* ListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C153B021D6D89700384550 /* ListItem.swift */; };
 		E1C153B321D6DB4F00384550 /* ListSearchMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C153B221D6DB4F00384550 /* ListSearchMode.swift */; };
 		E1C42D921ED1EDEF00EFDF36 /* UIColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C42D911ED1EDEF00EFDF36 /* UIColorExtensions.swift */; };
 		E1E051371ECFB43000D2CC30 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E051361ECFB43000D2CC30 /* AppDelegate.swift */; };
 		E1E0513E1ECFB43000D2CC30 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1E0513D1ECFB43000D2CC30 /* Assets.xcassets */; };
 		E1E051691ECFB64000D2CC30 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E051671ECFB64000D2CC30 /* ListViewController.swift */; };
-		E1E0516E1ECFB8A700D2CC30 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E0516D1ECFB8A700D2CC30 /* DataManager.swift */; };
 		E1E051981ED09D9000D2CC30 /* Launch.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1E051971ED09D9000D2CC30 /* Launch.storyboard */; };
 		E1E051A41ED0AE5700D2CC30 /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E051A31ED0AE5700D2CC30 /* DetailsViewController.swift */; };
 		E1E051B41ED0E03100D2CC30 /* DetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E1E051B31ED0E03100D2CC30 /* DetailsViewController.xib */; };
@@ -271,17 +271,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1E051691ECFB64000D2CC30 /* ListViewController.swift in Sources */,
+				E16AB8DA267A7D7100029665 /* DataManager.swift in Sources */,
 				E1E051D71ED139D500D2CC30 /* LocationManager.swift in Sources */,
 				E15FCD2321DA646B00C8F72D /* RootViewController.swift in Sources */,
 				E104FF0422BD712900F502E8 /* UIImageExtensions.swift in Sources */,
 				E1E051D31ED101C600D2CC30 /* MapAnnotation.swift in Sources */,
 				E123857B22BD44840060A8C2 /* ColorViewController.swift in Sources */,
-				E1E0516E1ECFB8A700D2CC30 /* DataManager.swift in Sources */,
-				E15FCD3621DAC7E000C8F72D /* MyPlaces.xcdatamodeld in Sources */,
 				E1C153B121D6D89700384550 /* ListItem.swift in Sources */,
 				E1C42D921ED1EDEF00EFDF36 /* UIColorExtensions.swift in Sources */,
 				E1C153B321D6DB4F00384550 /* ListSearchMode.swift in Sources */,
 				E1E051CA1ED0E9DB00D2CC30 /* MapViewController.swift in Sources */,
+				E16AB8DB267A7F2200029665 /* MyPlaces.xcdatamodeld in Sources */,
 				E1E051371ECFB43000D2CC30 /* AppDelegate.swift in Sources */,
 				E1E051A41ED0AE5700D2CC30 /* DetailsViewController.swift in Sources */,
 				E123857E22BD689D0060A8C2 /* CellAccessoryView.swift in Sources */,

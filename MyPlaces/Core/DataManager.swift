@@ -56,9 +56,18 @@ class DataManager {
     // MARK: - Private
 
     private var persistentContainer: NSPersistentContainer
+    private static let defaultColor: Int32 = 0xFF3B30
 
     private var context: NSManagedObjectContext {
         return persistentContainer.viewContext
+    }
+
+    private var colorMap: [String: Int32] {
+        var colorMap: [String: Int32] = [:]
+        for place in allPlaces {
+            colorMap[place.name ?? ""] = place.hexColor
+        }
+        return colorMap
     }
 }
 
@@ -82,6 +91,7 @@ extension DataManager {
     /// Attempt to parse the given KML file and store the data in Core Data
     func parseKMLFile(at url: URL) {
         guard let kmlData = try? Data(contentsOf: url) else { return }
+        let colorMap = self.colorMap
         deleteEverything()
         let kml = SWXMLHash.parse(kmlData)
         let documentKML = kml[KMLNames.kml][KMLNames.document]
@@ -100,16 +110,16 @@ extension DataManager {
                 guard let element = child.element else { continue }
                 switch element.name {
                 case KMLNames.folder:
-                    parseFolder(child, parentFolder: folder)
+                    parseFolder(child, parentFolder: folder, colorMap: colorMap)
                 case KMLNames.placemark:
-                    parsePlace(child, folder: folder)
+                    parsePlace(child, folder: folder, colorMap: colorMap)
                 default:
                     break
                 }
             }
         } else {
             let rootFolderKML = documentKML[KMLNames.folder]
-            parseFolder(rootFolderKML)
+            parseFolder(rootFolderKML, colorMap: colorMap)
         }
         saveContext()
     }
@@ -121,7 +131,9 @@ extension DataManager {
     }
     
     /// Parse a `<Folder>` KML element
-    private func parseFolder(_ folderKML: XMLIndexer, parentFolder: Folder? = nil) {
+    private func parseFolder(_ folderKML: XMLIndexer,
+                             parentFolder: Folder? = nil,
+                             colorMap: [String: Int32]) {
         let name = folderKML.textOfFirstChildElement(withName: KMLNames.name) ?? "Untitled Folder"
         let folder = Folder(context: context)
         folder.name = name
@@ -130,9 +142,9 @@ extension DataManager {
             guard let element = child.element else { continue }
             switch element.name {
             case KMLNames.folder:
-                parseFolder(child, parentFolder: folder)
+                parseFolder(child, parentFolder: folder, colorMap: colorMap)
             case KMLNames.placemark:
-                parsePlace(child, folder: folder)
+                parsePlace(child, folder: folder, colorMap: colorMap)
             default:
                 break
             }
@@ -140,7 +152,7 @@ extension DataManager {
     }
     
     /// Parse a `<Placemark>` KML element
-    private func parsePlace(_ placeKML: XMLIndexer, folder: Folder) {
+    private func parsePlace(_ placeKML: XMLIndexer, folder: Folder, colorMap: [String: Int32]) {
         let name = placeKML.textOfFirstChildElement(withName: KMLNames.name) ?? "Untitled Place"
         let details = placeKML.textOfFirstChildElement(withName: KMLNames.description) ?? "No Description"
         var coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
@@ -153,6 +165,7 @@ extension DataManager {
         place.latitude = coordinate.latitude
         place.longitude = coordinate.longitude
         place.folder = folder
+        place.hexColor = colorMap[name] ?? Self.defaultColor
     }
     
     /// Parse a `<Point>` KML element
