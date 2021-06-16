@@ -81,9 +81,7 @@ extension DataManager {
 
     /// Attempt to parse the given KML file and store the data in Core Data
     func parseKMLFile(at url: URL) {
-        guard url.startAccessingSecurityScopedResource(),
-            let kmlData = try? Data(contentsOf: url) else { return }
-        url.stopAccessingSecurityScopedResource()
+        guard let kmlData = try? Data(contentsOf: url) else { return }
         deleteEverything()
         let kml = SWXMLHash.parse(kmlData)
         let documentKML = kml[KMLNames.kml][KMLNames.document]
@@ -122,7 +120,7 @@ extension DataManager {
         let _ = try? context.execute(NSBatchDeleteRequest(fetchRequest: Place.fetchRequest()))
     }
     
-    /// Parse a <Folder> KML element
+    /// Parse a `<Folder>` KML element
     private func parseFolder(_ folderKML: XMLIndexer, parentFolder: Folder? = nil) {
         let name = folderKML.textOfFirstChildElement(withName: KMLNames.name) ?? "Untitled Folder"
         let folder = Folder(context: context)
@@ -141,7 +139,7 @@ extension DataManager {
         }
     }
     
-    /// Parse a <Placemark> KML element
+    /// Parse a `<Placemark>` KML element
     private func parsePlace(_ placeKML: XMLIndexer, folder: Folder) {
         let name = placeKML.textOfFirstChildElement(withName: KMLNames.name) ?? "Untitled Place"
         let details = placeKML.textOfFirstChildElement(withName: KMLNames.description) ?? "No Description"
@@ -157,7 +155,7 @@ extension DataManager {
         place.folder = folder
     }
     
-    /// Parse a <Point> KML element
+    /// Parse a `<Point>` KML element
     private func parseCoordinate(_ coordinateKML: XMLIndexer) -> CLLocationCoordinate2D {
         var longitude = 0.0
         var latitude = 0.0

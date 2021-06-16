@@ -45,7 +45,7 @@ class ListViewController: UITableViewController {
     // MARK: - Actions
 
     @objc private func uploadButtonTapped() {
-        let documentPicker = UIDocumentPickerViewController(documentTypes: ["public.kml"], in: .open)
+        let documentPicker = UIDocumentPickerViewController(documentTypes: ["public.kml"], in: .import)
         documentPicker.delegate = self
         documentPicker.allowsMultipleSelection = false
         present(documentPicker, animated: true, completion: nil)
