@@ -1,6 +1,7 @@
 import UIKit
 import CoreData
 import CoreLocation
+import UniformTypeIdentifiers
 
 class ListViewController: UITableViewController {
 
@@ -45,7 +46,8 @@ class ListViewController: UITableViewController {
     // MARK: - Actions
 
     @objc private func uploadButtonTapped() {
-        let documentPicker = UIDocumentPickerViewController(documentTypes: ["public.kml"], in: .import)
+        guard let documentType = UTType("public.kml") else { return }
+        let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [documentType], asCopy: true)
         documentPicker.delegate = self
         documentPicker.allowsMultipleSelection = false
         present(documentPicker, animated: true, completion: nil)

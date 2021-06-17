@@ -10,7 +10,7 @@ class LocationManager: NSObject {
     var currentLocation: CLLocation?
 
     func startTrackingLocation() {
-        switch CLLocationManager.authorizationStatus() {
+        switch manager.authorizationStatus {
         case .notDetermined:
             manager.requestWhenInUseAuthorization()
         case .authorizedWhenInUse, .authorizedAlways:
